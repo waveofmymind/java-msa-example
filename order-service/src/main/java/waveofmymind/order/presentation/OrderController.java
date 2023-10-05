@@ -1,13 +1,26 @@
 package waveofmymind.order.presentation;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+import waveofmymind.order.application.OrderService;
+import waveofmymind.order.domain.Order;
 
 @RestController
+@RequiredArgsConstructor
 public class OrderController {
 
-    @GetMapping("/orders")
-    public String getOrder() {
-        return "Order";
+    private final OrderService orderService;
+
+    @GetMapping("/orders/{orderId}")
+    public Order getOrder(@PathVariable Long orderId) {
+        return orderService.getOrder(orderId);
+    }
+
+    @PostMapping("/orders")
+    public String requestOrder(@RequestBody
+                               OrderRequest request) {
+        orderService.requestOrder(request.toCommand());
+
+        return "Order requested";
     }
 }
